@@ -1,0 +1,18 @@
+<div class="m-0 bg-gradient-to-br from-gray-900 via-gray-800 to-gray-900 overflow-hidden fixed inset-0">
+  <!-- Three.js Scene Container -->
+  <div #sceneContainer class="fixed inset-0"></div>
+  
+  <!-- Control Panel -->
+  <app-control-panel 
+    [currentMode]="currentMode"
+    (modeChange)="onModeChange($event)"
+    (animationSelected)="onAnimationSelected($event)">
+  </app-control-panel>
+  
+  <!-- Video Display -->
+  <app-video-display 
+    [videoElement]="videoElement">
+  </app-video-display>
+</div>
+
+

@@ -1,0 +1,39 @@
+{
+  "name": "mediapipe-pose2bvh-angular",
+  "version": "1.0.0",
+  "description": "MediaPipe Pose to BVH converter with Angular and Vite",
+  "type": "module",
+  "scripts": {
+    "dev": "vite",
+    "build": "vite build",
+    "preview": "vite preview",
+    "lint": "eslint . --ext ts,html --report-unused-disable-directives --max-warnings 0"
+  },
+  "dependencies": {
+    "@angular/animations": "^18.0.0",
+    "@angular/common": "^18.0.0",
+    "@angular/compiler": "^18.0.0",
+    "@angular/core": "^18.0.0",
+    "@angular/forms": "^18.0.0",
+    "@angular/platform-browser": "^18.0.0",
+    "@angular/platform-browser-dynamic": "^18.0.0",
+    "@angular/router": "^18.0.0",
+    "rxjs": "^7.8.1",
+    "three": "^0.160.0",
+    "tslib": "^2.6.2",
+    "zone.js": "^0.14.10"
+  },
+  "devDependencies": {
+    "@tailwindcss/postcss": "^4.1.17",
+    "@types/node": "^20.11.0",
+    "@types/three": "^0.160.0",
+    "@typescript-eslint/eslint-plugin": "^6.19.0",
+    "@typescript-eslint/parser": "^6.19.0",
+    "autoprefixer": "^10.4.21",
+    "eslint": "^8.56.0",
+    "postcss": "^8.5.6",
+    "tailwindcss": "^4.1.17",
+    "typescript": "~5.3.3",
+    "vite": "^5.0.11"
+  }
+}
