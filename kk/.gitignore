@@ -34,4 +34,6 @@ lerna-debug.log*
 # OS
 Thumbs.db
 
+# Exclude mediapipe-pose2bvh folder
+mediapipe-pose2bvh/
 
