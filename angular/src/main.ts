@@ -6,7 +6,6 @@ import { ThreeSceneService } from './app/services/three-scene.service';
 import { MediaPipeService } from './app/services/mediapipe.service';
 import { PoseTrackingService } from './app/services/pose-tracking.service';
 import { BVHConverterService } from './app/services/bvh-converter.service';
-import './styles.css';
 
 bootstrapApplication(AppComponent, {
   providers: [

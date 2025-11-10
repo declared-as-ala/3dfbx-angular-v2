@@ -34,6 +34,9 @@ lerna-debug.log*
 # OS
 Thumbs.db
 
+# Angular cache
+.angular/
+
 # Exclude mediapipe-pose2bvh folder
 mediapipe-pose2bvh/
 

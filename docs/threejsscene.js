@@ -1104,14 +1104,16 @@ function animate() {
     if (faceResults && faceResults.faceBlendshapes && faceResults.faceBlendshapes.length > 0) {
 
         const face = scene.getObjectByName('mesh_2');
-        const faceBlendshapes = faceResults.faceBlendshapes[0].categories;
-        for (const blendshape of faceBlendshapes) {
-            const categoryName = blendshape.categoryName;
-            const score = blendshape.score;
-            const index = face.morphTargetDictionary[blendshapesMap[categoryName]];
+        if (face && face.morphTargetDictionary) {
+            const faceBlendshapes = faceResults.faceBlendshapes[0].categories;
+            for (const blendshape of faceBlendshapes) {
+                const categoryName = blendshape.categoryName;
+                const score = blendshape.score;
+                const index = face.morphTargetDictionary[blendshapesMap[categoryName]];
 
-            if (index !== undefined) {
-                face.morphTargetInfluences[index] = score;
+                if (index !== undefined) {
+                    face.morphTargetInfluences[index] = score;
+                }
             }
         }
         // map face orientaion to head
@@ -1126,9 +1128,13 @@ function animate() {
 
     }
     
-    var head = model.getObjectByName("mixamorigHead");
-    head.getWorldPosition(facemesh.position);
-    head.getWorldQuaternion(facemesh.quaternion);
+    if (model && facemesh) {
+        var head = model.getObjectByName("mixamorigHead");
+        if (head) {
+            head.getWorldPosition(facemesh.position);
+            head.getWorldQuaternion(facemesh.quaternion);
+        }
+    }
 
     renderer.render(scene, camera);
 

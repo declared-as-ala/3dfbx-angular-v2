@@ -30,7 +30,7 @@ export interface FaceResults {
   providedIn: 'root'
 })
 export class MediaPipeService {
-  private faceLandmarker?: FaceLandmarker;
+  private faceLandmarker?: any;
   private holistic?: any;
   private camera?: any;
   private videoElement?: HTMLVideoElement;
@@ -63,11 +63,38 @@ export class MediaPipeService {
   }
 
   private async initializeFaceLandmarker(): Promise<void> {
-    // Dynamically import MediaPipe Tasks Vision
+    // Load MediaPipe Tasks Vision via script tag
     try {
-      const visionModule = await import('https://cdn.jsdelivr.net/npm/@mediapipe/tasks-vision@0.10.3');
-      const FilesetResolverClass = visionModule.FilesetResolver;
-      const FaceLandmarkerClass = visionModule.FaceLandmarker;
+      // Load the script if not already loaded
+      if (!(window as any).FaceLandmarker) {
+        await new Promise<void>((resolve, reject) => {
+          const script = document.createElement('script');
+          script.type = 'module';
+          script.src = 'https://cdn.jsdelivr.net/npm/@mediapipe/tasks-vision@0.10.3';
+          script.onload = () => resolve();
+          script.onerror = () => reject(new Error('Failed to load MediaPipe Tasks Vision'));
+          document.head.appendChild(script);
+        });
+        
+        // Wait for module to be available
+        let retries = 0;
+        while (!(window as any).FaceLandmarker && retries < 50) {
+          await new Promise(resolve => setTimeout(resolve, 100));
+          retries++;
+        }
+      }
+      
+      // Access from global scope or use dynamic import fallback
+      let FilesetResolverClass: any;
+      let FaceLandmarkerClass: any;
+      
+      if ((window as any).FaceLandmarker) {
+        FaceLandmarkerClass = (window as any).FaceLandmarker;
+        FilesetResolverClass = (window as any).FilesetResolver;
+      } else {
+        console.error('FaceLandmarker not available');
+        return;
+      }
 
       const filesetResolver = await FilesetResolverClass.forVisionTasks(
         'https://cdn.jsdelivr.net/npm/@mediapipe/tasks-vision@0.10.3/wasm'
@@ -95,12 +122,9 @@ export class MediaPipeService {
   }
 
   private async initializeHolistic(): Promise<void> {
-    // Dynamically import MediaPipe Holistic
+    // MediaPipe Holistic and Camera are loaded via script tags in index.html
     try {
-      await import('https://cdn.jsdelivr.net/npm/@mediapipe/holistic@latest/holistic.js');
-      await import('https://cdn.jsdelivr.net/npm/@mediapipe/camera_utils/camera_utils.js');
-
-      // Wait a bit for globals to be set
+      // Wait for globals to be set (scripts are loaded in index.html)
       let retries = 0;
       while (!(window as any).Holistic && retries < 50) {
         await new Promise(resolve => setTimeout(resolve, 100));
@@ -129,7 +153,7 @@ export class MediaPipeService {
       minTrackingConfidence: 0.5
     });
 
-    this.holistic.onResults((results) => {
+    this.holistic.onResults((results: any) => {
       this.holisticResults = results;
       if (this.trackingCallback) {
         this.trackingCallback(results);

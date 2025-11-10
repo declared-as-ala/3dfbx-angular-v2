@@ -23,7 +23,7 @@ export class ThreeSceneService {
   private model?: THREE.Group;
   private facemesh?: THREE.Object3D;
   private mixer?: THREE.AnimationMixer;
-  private currentAnimation?: THREE.AnimationAction;
+  private currentAnimation?: THREE.AnimationAction | null;
   private clock = new THREE.Clock();
   private animationId?: number;
   private currentMode: 'tracking' | 'animation' = 'tracking';
@@ -204,7 +204,7 @@ export class ThreeSceneService {
       // Stop animations when switching to tracking mode
       if (this.currentAnimation) {
         this.currentAnimation.stop();
-        this.currentAnimation = null;
+        this.currentAnimation = undefined;
       }
       if (this.mixer) {
         this.mixer.stopAllAction();
@@ -354,7 +354,7 @@ export class ThreeSceneService {
         }
         if (this.currentAnimation) {
           this.currentAnimation.stop();
-          this.currentAnimation = null;
+          this.currentAnimation = undefined;
         }
 
         // Try to find animations in the loaded object
@@ -465,7 +465,7 @@ export class ThreeSceneService {
                   const animatedMixer = new THREE.AnimationMixer(animObject);
                   this.currentAnimation = animatedMixer.clipAction(clip);
                   this.currentAnimation.reset();
-                  this.currentAnimation.setLoop(THREE.LoopRepeat);
+                  this.currentAnimation.setLoop(THREE.LoopRepeat, Infinity);
                   this.currentAnimation.setEffectiveWeight(1.0);
                   this.currentAnimation.timeScale = 1.0;
                   this.currentAnimation.play();
@@ -485,19 +485,21 @@ export class ThreeSceneService {
                 } else {
                   // Fallback: try to apply to our model (might not work due to bone name mismatch)
                   console.log('No skeleton found in loaded object, trying to apply to our model');
-                  this.currentAnimation = this.mixer.clipAction(clip, this.model!);
-                  this.currentAnimation.reset();
-                  this.currentAnimation.setLoop(THREE.LoopRepeat);
-                  this.currentAnimation.setEffectiveWeight(1.0);
-                  this.currentAnimation.timeScale = 1.0;
-                  this.currentAnimation.play();
-                  
-                  const delta = this.clock.getDelta();
-                  this.mixer.update(delta);
-                  
-                  console.log('Animation playing on our model:', clip.name || animationFile);
-                  animationPlayed = true;
-                  break;
+                  if (this.mixer && this.model) {
+                    this.currentAnimation = this.mixer.clipAction(clip, this.model);
+                    this.currentAnimation.reset();
+                    this.currentAnimation.setLoop(THREE.LoopRepeat, Infinity);
+                    this.currentAnimation.setEffectiveWeight(1.0);
+                    this.currentAnimation.timeScale = 1.0;
+                    this.currentAnimation.play();
+                    
+                    const delta = this.clock.getDelta();
+                    this.mixer.update(delta);
+                    
+                    console.log('Animation playing on our model:', clip.name || animationFile);
+                    animationPlayed = true;
+                    break;
+                  }
                 }
               } catch (error) {
                 console.error('Error creating animation action:', error);
@@ -537,7 +539,7 @@ export class ThreeSceneService {
                   const childClip = animatedChild.animations[0];
                   if (childClip) {
                     const action = childMixer.clipAction(childClip);
-                    action.setLoop(THREE.LoopRepeat);
+                    action.setLoop(THREE.LoopRepeat, Infinity);
                     action.play();
                     (this as any).childMixer = childMixer;
                     (this as any).animatedChild = animatedChild;
@@ -560,7 +562,7 @@ export class ThreeSceneService {
                     // Create a new mixer for the child object
                     const childMixer = new THREE.AnimationMixer(child);
                     const action = childMixer.clipAction(childClip);
-                    action.setLoop(THREE.LoopRepeat);
+                    action.setLoop(THREE.LoopRepeat, Infinity);
                     action.play();
                     console.log('Playing animation on child object:', child.name);
                     (this as any).childMixer = childMixer;

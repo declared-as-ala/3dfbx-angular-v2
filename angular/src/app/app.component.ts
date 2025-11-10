@@ -10,8 +10,8 @@ import { MediaPipeService } from './services/mediapipe.service';
   standalone: true,
   imports: [CommonModule, ControlPanelComponent, VideoDisplayComponent],
   template: `
-    <div class="m-0 bg-gradient-to-br from-gray-900 via-gray-800 to-gray-900 overflow-hidden fixed inset-0">
-      <div #sceneContainer class="fixed inset-0"></div>
+    <div class="app-container">
+      <div #sceneContainer class="scene-container"></div>
       <app-control-panel 
         [currentMode]="currentMode"
         (modeChange)="onModeChange($event)"
@@ -25,6 +25,30 @@ import { MediaPipeService } from './services/mediapipe.service';
   styles: [`
     :host {
       display: block;
+      width: 100%;
+      height: 100%;
+      position: fixed;
+      top: 0;
+      left: 0;
+      right: 0;
+      bottom: 0;
+      overflow: hidden;
+    }
+    
+    .app-container {
+      width: 100%;
+      height: 100%;
+      position: relative;
+      overflow: hidden;
+      background: linear-gradient(135deg, #0f172a 0%, #1e293b 50%, #0f172a 100%);
+    }
+    
+    .scene-container {
+      position: fixed;
+      top: 0;
+      left: 0;
+      right: 0;
+      bottom: 0;
       width: 100%;
       height: 100%;
     }

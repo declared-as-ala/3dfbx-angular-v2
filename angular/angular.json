@@ -33,7 +33,13 @@
             "styles": [
               "src/styles.css"
             ],
-            "scripts": []
+            "stylePreprocessorOptions": {
+              "includePaths": []
+            },
+            "scripts": [],
+            "allowedCommonJsDependencies": [
+              "three"
+            ]
           },
           "configurations": {
             "production": {
@@ -76,6 +82,9 @@
         }
       }
     }
+  },
+  "cli": {
+    "analytics": "bd8a3580-b24a-4615-b85c-183adfb0b21d"
   }
 }
 
